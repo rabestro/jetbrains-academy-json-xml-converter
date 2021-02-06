@@ -1,7 +1,10 @@
 package converter;
 
+import converter.domain.Element;
+
 public class XmlMapper {
-    public Node read(final String data) {
+    public Element read(final String data) {
+
         return null;
     }
 

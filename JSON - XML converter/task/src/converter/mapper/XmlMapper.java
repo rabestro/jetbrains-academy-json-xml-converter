@@ -4,6 +4,7 @@ import converter.domain.Content;
 import converter.domain.Element;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,7 @@ import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class XmlMapper implements ObjectMapper {
     private static final Pattern ELEMENT = Pattern.compile(
-            "<(?<tag>\\w+)(?<attributes> .*)?(?:/>|>(?<content>.*)</\\k<tag>)>",
+            "<(?<tag>\\w+)(?<attributes> .*)?(:? ?/>|>(?<content>.*)</\\k<tag>>)",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
@@ -22,7 +23,7 @@ public class XmlMapper implements ObjectMapper {
         }
         final var tag = matcher.group("tag");
         final var attributes = parseAttributes(matcher.group("attributes"));
-        final var content = parseContent(matcher.group("content").trim());
+        final var content = parseContent(matcher.group("content"));
 
         return new Element(tag, attributes, content);
     }
@@ -59,11 +60,11 @@ public class XmlMapper implements ObjectMapper {
     }
 
     private Content parseContent(final String content) {
-        return new Content(content);
+        return new Content(Objects.toString(content, ""));
     }
 
     private Map<String, String> parseAttributes(final String attributes) {
-        return ATTRIBUTES.matcher(attributes).results()
+        return ATTRIBUTES.matcher(Objects.toString(attributes, "")).results()
                 .collect(toUnmodifiableMap(result -> result.group(1), result -> result.group(2)));
     }
 

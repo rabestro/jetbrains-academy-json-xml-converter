@@ -16,7 +16,7 @@ public class Main {
 
         final var document = reader.read(data);
 
-        System.out.println(new XmlMapper().write(document));
+        System.out.println(reader.write(document));
     }
 
 }

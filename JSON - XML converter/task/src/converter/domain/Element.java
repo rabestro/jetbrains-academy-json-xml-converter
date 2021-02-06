@@ -3,13 +3,29 @@ package converter.domain;
 import java.util.Map;
 
 public class Element {
-    private final String name;
+    private final String tag;
     private final Map<String, String> attributes;
     private final Content content;
 
-    public Element(final String name, final Map<String, String> attributes, final Content content) {
-        this.name = name;
+    public Element(final String tag, final Map<String, String> attributes, final Content content) {
+        this.tag = tag;
         this.attributes = attributes;
         this.content = content;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public boolean hasContent() {
+        return content.isPresent();
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

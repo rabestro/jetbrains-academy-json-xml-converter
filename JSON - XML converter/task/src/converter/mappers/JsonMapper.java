@@ -7,4 +7,9 @@ public class JsonMapper implements ObjectMapper {
     public Element read(String data) {
         return null;
     }
+
+    @Override
+    public String write(Element document) {
+        return null;
+    }
 }

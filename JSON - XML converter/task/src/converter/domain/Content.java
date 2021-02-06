@@ -5,27 +5,35 @@ import java.util.List;
 
 public class Content {
     private final String data;
-    private final List<Element> elements;
+    private final List<Element> children;
 
     public Content(final String data) {
         this.data = data;
-        elements = Collections.emptyList();
+        children = Collections.emptyList();
     }
 
-    public Content(final List<Element> elements) {
-        this.elements = elements;
+    public Content(final List<Element> children) {
+        this.children = children;
         data = "";
     }
 
     public boolean isEmpty() {
-        return data.isEmpty() && elements.isEmpty();
+        return data.isEmpty() && children.isEmpty();
     }
 
     public boolean hasData() {
         return !data.isEmpty();
     }
 
-    public boolean hasElements() {
-        return !elements.isEmpty();
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
+    public boolean isPresent() {
+        return hasData() || hasChildren();
+    }
+
+    public String getData() {
+        return data;
     }
 }

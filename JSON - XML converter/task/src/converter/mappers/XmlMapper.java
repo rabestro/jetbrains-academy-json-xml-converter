@@ -5,6 +5,7 @@ import converter.domain.Element;
 
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
@@ -26,6 +27,37 @@ public class XmlMapper implements ObjectMapper {
         return new Element(tag, attributes, content);
     }
 
+    @Override
+    public String write(final Element document) {
+        final var output = new StringBuilder();
+        output.append('<')
+                .append(document.getTag())
+                .append(writeAttributes(document));
+        if (document.hasContent()) {
+            output.append('>')
+                    .append(writeContent(document.getContent()))
+                    .append("</")
+                    .append(document.getTag())
+                    .append('>');
+        } else {
+            output.append(" />");
+        }
+        return output.toString();
+    }
+
+    private String writeAttributes(final Element document) {
+        return document.getAttributes().entrySet().stream()
+                .map(entry -> String.format(" \"%s\" = \"%s\"", entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining());
+    }
+
+    private String writeContent(final Content content) {
+        if (content.hasData()) {
+            return content.getData();
+        }
+        return "";
+    }
+
     private Content parseContent(final String content) {
         return new Content(content);
     }
@@ -35,7 +67,4 @@ public class XmlMapper implements ObjectMapper {
                 .collect(toUnmodifiableMap(result -> result.group(1), result -> result.group(2)));
     }
 
-    public String toJson() {
-        return "";
-    }
 }

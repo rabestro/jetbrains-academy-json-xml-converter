@@ -1,9 +1,22 @@
 package converter;
 
+import converter.mappers.JsonMapper;
+import converter.mappers.XmlMapper;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        final var data = Files.readString(Path.of("test.txt"));
+        final var isJson = data.startsWith("{");
+        final var mapper = isJson ? new JsonMapper() : new XmlMapper();
+        final var document = mapper.read(data);
+
+        //(isJson ? new XmlMapper() : new JsonMapper())
+
         final var scanner = new Scanner(System.in);
         final var converter = new Converter(scanner.nextLine());
 

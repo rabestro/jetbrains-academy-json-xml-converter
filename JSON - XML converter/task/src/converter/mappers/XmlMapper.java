@@ -5,12 +5,15 @@ import converter.domain.Element;
 
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class XmlMapper {
     private static final Pattern ELEMENT = Pattern.compile(
             "<(?<tag>\\w+)(?<attributes> .*)?(?:/>|>(?<content>.*)</\\k<tag>)",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+) *= *['\"]([^'\"]*)['\"]");
+    private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element read(final String data) {
         final var matcher = ELEMENT.matcher(data);
@@ -29,8 +32,8 @@ public class XmlMapper {
     }
 
     private Map<String, String> parseAttributes(final String attributes) {
-
-        return null;
+        return ATTRIBUTES.matcher(attributes).results()
+                .collect(toUnmodifiableMap(result -> result.group(1), result -> result.group(2)));
     }
 
     public String toJson() {

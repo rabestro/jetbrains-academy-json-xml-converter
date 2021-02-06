@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
-public class XmlMapper {
+public class XmlMapper implements ObjectMapper {
     private static final Pattern ELEMENT = Pattern.compile(
             "<(?<tag>\\w+)(?<attributes> .*)?(?:/>|>(?<content>.*)</\\k<tag>)",
             Pattern.CASE_INSENSITIVE);
@@ -21,13 +21,13 @@ public class XmlMapper {
         }
         final var tag = matcher.group("tag");
         final var attributes = parseAttributes(matcher.group("attributes"));
-        final var content = parseContent(matcher.group("content"));
+        final var content = parseContent(matcher.group("content").trim());
 
         return new Element(tag, attributes, content);
     }
 
     private Content parseContent(final String content) {
-        return null;
+        return new Content(content);
     }
 
     private Map<String, String> parseAttributes(final String attributes) {

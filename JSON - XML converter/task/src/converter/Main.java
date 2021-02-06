@@ -16,7 +16,7 @@ public class Main {
 
         final var document = reader.read(data);
 
-        System.out.println(reader.write(document));
+        System.out.println(writer.write(document));
     }
 
 }

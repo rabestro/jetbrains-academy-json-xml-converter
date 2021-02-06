@@ -1,4 +1,4 @@
-package converter.mappers;
+package converter.mapper;
 
 import converter.domain.Content;
 import converter.domain.Element;
@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class XmlMapper implements ObjectMapper {
     private static final Pattern ELEMENT = Pattern.compile(
-            "<(?<tag>\\w+)(?<attributes> .*)?(?:/>|>(?<content>.*)</\\k<tag>)",
+            "<(?<tag>\\w+)(?<attributes> .*)?(?:/>|>(?<content>.*)</\\k<tag>)>",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
@@ -47,7 +47,7 @@ public class XmlMapper implements ObjectMapper {
 
     private String writeAttributes(final Element document) {
         return document.getAttributes().entrySet().stream()
-                .map(entry -> String.format(" \"%s\" = \"%s\"", entry.getKey(), entry.getValue()))
+                .map(entry -> String.format(" %s = \"%s\"", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining());
     }
 

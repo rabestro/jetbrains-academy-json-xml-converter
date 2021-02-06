@@ -1,4 +1,4 @@
-package converter.mappers;
+package converter.mapper;
 
 import converter.domain.Element;
 

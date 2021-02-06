@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNullElse;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class JsonMapper implements ObjectMapper {
-    private static final Pattern ELEMENT = Pattern.compile("\\{\"(?<tag>\\w+)\"\\s*:\\s*" +
+    private static final Pattern ELEMENT = Pattern.compile("\\{\\s*\"(?<tag>\\w+)\"\\s*:\\s*" +
                     "(:?\"(?<content1>.*)\"|\\{(?<attributes>.*)\"#\\k<tag>\"\\s*:\\s*\"?(?<content2>.*?)\"?\\s*})\\s*}",
             Pattern.CASE_INSENSITIVE + Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("\"@(\\w+)\"\\s*:\\s*\"(.*)\"");

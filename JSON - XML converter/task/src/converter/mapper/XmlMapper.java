@@ -21,7 +21,7 @@ public class XmlMapper implements ObjectMapper {
             "<(?<tag>\\w+)\\s*(?<attributes>\\s+[^>]*)?\\s*(:?/>|>\\s*(?<content>.*)\\s*</\\k<tag>>)",
             Pattern.DOTALL);
     private static final Pattern CHILDREN = Pattern.compile(
-            "(?<child><(?<tag>\\w+)[^/<]*(/>|</\\k<tag>>))", Pattern.DOTALL);
+            "(?<child><(?<tag>\\w+)([^/<]*/>|.*</\\k<tag>>))", Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element parse(final String data) {

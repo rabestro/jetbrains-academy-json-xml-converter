@@ -13,8 +13,16 @@ public class Element {
         this.content = content;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    public Content getContent() {
+        return content;
     }
 
     public boolean hasContent() {
@@ -25,11 +33,12 @@ public class Element {
         return !attributes.isEmpty();
     }
 
-    public Content getContent() {
-        return content;
-    }
-
-    public String getTag() {
-        return tag;
+    @Override
+    public String toString() {
+        return "Element{" +
+                "tag='" + tag + '\'' +
+                ", attributes=" + attributes +
+                ", content=" + content.getData() +
+                '}';
     }
 }

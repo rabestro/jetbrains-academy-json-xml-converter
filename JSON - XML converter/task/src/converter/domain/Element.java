@@ -21,6 +21,10 @@ public class Element {
         return content.isPresent();
     }
 
+    public boolean hasAttributes() {
+        return !attributes.isEmpty();
+    }
+
     public Content getContent() {
         return content;
     }

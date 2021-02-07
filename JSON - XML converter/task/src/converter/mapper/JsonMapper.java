@@ -41,7 +41,7 @@ public class JsonMapper implements ObjectMapper {
 
     private String writeAttributes(final Element document) {
         return document.getAttributes().entrySet().stream()
-                .map(entry -> String.format(" \"%s\" : \"%s\"", entry.getKey(), entry.getValue()))
+                .map(entry -> String.format(" \"@%s\" : \"%s\"", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(",",
                         "{", ", \"#" + document.getTag() + "\" : " + writeContent(document) + "}"));
     }

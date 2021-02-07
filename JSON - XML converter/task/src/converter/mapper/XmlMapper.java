@@ -9,6 +9,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
@@ -20,7 +21,7 @@ public class XmlMapper implements ObjectMapper {
     private static final Pattern CHILDREN = Pattern.compile(
             "(?<child><(?<tag>\\w+)(?=[ />]).*?(/>|</\\k<tag>>))");
 
-    public Element read(final String data) {
+    public Element parse(final String data) {
         final var matcher = ELEMENT.matcher(data);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Not a valid xml: " + data);
@@ -33,14 +34,14 @@ public class XmlMapper implements ObjectMapper {
     }
 
     @Override
-    public String write(final Element document) {
+    public String print(final Element document) {
         final var output = new StringBuilder();
         output.append('<')
                 .append(document.getTag())
-                .append(writeAttributes(document));
+                .append(printAttributes(document));
         if (document.hasContent()) {
             output.append('>')
-                    .append(writeContent(document.getContent()))
+                    .append(printContent(document.getContent()))
                     .append("</")
                     .append(document.getTag())
                     .append('>');
@@ -50,13 +51,13 @@ public class XmlMapper implements ObjectMapper {
         return output.toString();
     }
 
-    private String writeAttributes(final Element document) {
+    private String printAttributes(final Element document) {
         return document.getAttributes().entrySet().stream()
                 .map(entry -> String.format(" %s = \"%s\"", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining());
     }
 
-    private String writeContent(final Content content) {
+    private String printContent(final Content content) {
         if (content.hasData()) {
             return content.getData();
         }
@@ -64,15 +65,20 @@ public class XmlMapper implements ObjectMapper {
     }
 
     private Content parseContent(final String content) {
-        var data = Objects.toString(content, "").strip();
-        if (!data.startsWith("<")) {
-            return new Content(data);
+        if (isNull(content)) {
+            return new Content();
         }
-        return new Content(CHILDREN.matcher(data)
+        if (!content.startsWith("<")) {
+            return new Content(content);
+        }
+        final var children = CHILDREN
+                .matcher(content)
                 .results()
                 .map(MatchResult::group)
-                .map(this::read)
-                .collect(toUnmodifiableList()));
+                .map(this::parse)
+                .collect(toUnmodifiableList());
+
+        return new Content(children);
     }
 
     private Map<String, String> parseAttributes(final String attributes) {

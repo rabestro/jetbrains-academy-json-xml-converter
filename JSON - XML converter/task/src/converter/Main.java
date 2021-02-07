@@ -14,9 +14,9 @@ public class Main {
         final var reader = isJson ? new JsonMapper() : new XmlMapper();
         final var writer = isJson ? new XmlMapper() : new JsonMapper();
 
-        final var document = reader.read(data);
+        final var document = reader.parse(data);
 
-        System.out.println(writer.write(document));
+        System.out.println(writer.print(document));
     }
 
 }

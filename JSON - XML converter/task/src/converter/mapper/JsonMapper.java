@@ -18,7 +18,7 @@ public class JsonMapper implements ObjectMapper {
     private static final Pattern ATTRIBUTES = Pattern.compile("\"@(\\w+)\"\\s*:\\s*\"?(.*?)\"?\\s*,");
 
     @Override
-    public Element read(String data) {
+    public Element parse(String data) {
         final var matcher = ELEMENT.matcher(data);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Not a valid json: " + data);
@@ -31,7 +31,7 @@ public class JsonMapper implements ObjectMapper {
     }
 
     @Override
-    public String write(Element document) {
+    public String print(Element document) {
         return "{\"" + document.getTag() + "\":" +
                 (document.hasAttributes()
                         ? writeAttributes(document)

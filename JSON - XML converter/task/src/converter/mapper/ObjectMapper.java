@@ -3,7 +3,7 @@ package converter.mapper;
 import converter.document.Element;
 
 public interface ObjectMapper {
-    Element read(final String data);
+    Element parse(final String data);
 
-    String write(final Element document);
+    String print(final Element document);
 }

@@ -1,28 +1,31 @@
 package converter.document;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import static java.util.Collections.emptyList;
 
 public class Content {
     private final String data;
     private final List<Element> children;
 
+    public Content() {
+        this.data = null;
+        children = emptyList();
+    }
+
     public Content(final String data) {
         this.data = data;
-        children = Collections.emptyList();
+        children = emptyList();
     }
 
     public Content(final List<Element> children) {
+        data = null;
         this.children = children;
-        data = "";
-    }
-
-    public boolean isEmpty() {
-        return data.isEmpty() && children.isEmpty();
     }
 
     public boolean hasData() {
-        return !data.isEmpty();
+        return Objects.nonNull(data);
     }
 
     public boolean hasChildren() {
@@ -35,5 +38,9 @@ public class Content {
 
     public String getData() {
         return data;
+    }
+
+    public List<Element> getChildren() {
+        return children;
     }
 }

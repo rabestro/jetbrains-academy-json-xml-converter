@@ -17,6 +17,7 @@ public class Main {
         final var document = reader.parse(data);
 
         System.out.println(writer.print(document));
+
     }
 
 }

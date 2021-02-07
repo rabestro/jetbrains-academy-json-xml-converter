@@ -28,19 +28,20 @@ public class Content {
         return Objects.nonNull(data);
     }
 
+    public String getData() {
+        return data;
+    }
+
     public boolean hasChildren() {
         return !children.isEmpty();
+    }
+
+    public List<Element> getChildren() {
+        return children;
     }
 
     public boolean isPresent() {
         return hasData() || hasChildren();
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public List<Element> getChildren() {
-        return children;
-    }
 }

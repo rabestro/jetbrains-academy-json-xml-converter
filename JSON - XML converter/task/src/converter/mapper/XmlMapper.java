@@ -5,6 +5,7 @@ import converter.document.Element;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -14,12 +15,13 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class XmlMapper implements ObjectMapper {
+    private static final Logger log = Logger.getLogger(XmlMapper.class.getName());
+
     private static final Pattern ELEMENT = Pattern.compile(
-            "<(?<tag>\\w+)(?<attributes> .*)?(:? ?/>|>(?<content>.*)</\\k<tag>>)",
-            Pattern.CASE_INSENSITIVE + Pattern.DOTALL);
-    private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
+            "<(?<tag>\\w+)(?<attributes> .*)?(:?>\\s*(?<content>.*)\\s*</\\k<tag>>| ?/>)", Pattern.DOTALL);
     private static final Pattern CHILDREN = Pattern.compile(
-            "(?<child><(?<tag>\\w+)(?=[ />]).*?(/>|</\\k<tag>>))");
+            "(?<child><(?<tag>\\w+).*</\\k<tag>>|<\\w+[^/]*/>)", Pattern.DOTALL);
+    private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element parse(final String data) {
         final var matcher = ELEMENT.matcher(data);
@@ -68,11 +70,12 @@ public class XmlMapper implements ObjectMapper {
         if (isNull(content)) {
             return new Content();
         }
-        if (!content.startsWith("<")) {
+        final var data = content.strip();
+        if (!data.startsWith("<")) {
             return new Content(content);
         }
         final var children = CHILDREN
-                .matcher(content)
+                .matcher(data)
                 .results()
                 .map(MatchResult::group)
                 .map(this::parse)
@@ -82,8 +85,11 @@ public class XmlMapper implements ObjectMapper {
     }
 
     private Map<String, String> parseAttributes(final String attributes) {
-        return ATTRIBUTES.matcher(Objects.toString(attributes, "")).results()
+        log.entering(XmlMapper.class.getName(), "parseAttributes", attributes);
+        final var output =  ATTRIBUTES.matcher(Objects.toString(attributes, "")).results()
                 .collect(toUnmodifiableMap(result -> result.group(1), result -> result.group(2)));
+        log.exiting(XmlMapper.class.getName(), "parseAttributes", output);
+        return output;
     }
 
 }

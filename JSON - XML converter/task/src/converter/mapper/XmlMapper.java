@@ -5,16 +5,20 @@ import converter.document.Element;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
 public class XmlMapper implements ObjectMapper {
     private static final Pattern ELEMENT = Pattern.compile(
             "<(?<tag>\\w+)(?<attributes> .*)?(:? ?/>|>(?<content>.*)</\\k<tag>>)",
-            Pattern.CASE_INSENSITIVE);
+            Pattern.CASE_INSENSITIVE + Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
+    private static final Pattern CHILDREN = Pattern.compile(
+            "(?<child><(?<tag>\\w+)(?=[ />]).*?(/>|</\\k<tag>>))");
 
     public Element read(final String data) {
         final var matcher = ELEMENT.matcher(data);
@@ -60,7 +64,15 @@ public class XmlMapper implements ObjectMapper {
     }
 
     private Content parseContent(final String content) {
-        return new Content(Objects.toString(content, ""));
+        var data = Objects.toString(content, "").strip();
+        if (!data.startsWith("<")) {
+            return new Content(data);
+        }
+        return new Content(CHILDREN.matcher(data)
+                .results()
+                .map(MatchResult::group)
+                .map(this::read)
+                .collect(toUnmodifiableList()));
     }
 
     private Map<String, String> parseAttributes(final String attributes) {

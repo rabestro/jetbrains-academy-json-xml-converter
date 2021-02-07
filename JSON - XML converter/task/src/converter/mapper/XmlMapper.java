@@ -3,6 +3,7 @@ package converter.mapper;
 import converter.document.Content;
 import converter.document.Element;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class XmlMapper implements ObjectMapper {
             "<(?<tag>\\w+)\\s*(?<attributes>\\s+[^>]*)?\\s*(:?/>|>\\s*(?<content>.*)\\s*</\\k<tag>>)",
             Pattern.DOTALL);
     private static final Pattern CHILDREN = Pattern.compile(
-            "(?<child><(?<tag>\\w+)([^/<]*/>|.*</\\k<tag>>))", Pattern.DOTALL);
+            "(?<child><(?<tag>\\w+)[^/>]*(/>|>.*?</\\k<tag>>))", Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element parse(final String data) {
@@ -96,7 +97,11 @@ public class XmlMapper implements ObjectMapper {
     private Map<String, String> parseAttributes(final String attributes) {
         log.entering(XmlMapper.class.getName(), "parseAttributes", attributes);
         final var output =  ATTRIBUTES.matcher(Objects.toString(attributes, "")).results()
-                .collect(toUnmodifiableMap(result -> result.group(1), result -> result.group(2)));
+                .collect(Collectors.toMap(
+                        result -> result.group(1),
+                        result -> result.group(2),
+                        (v1, v2) -> { throw new IllegalStateException(); },
+                        LinkedHashMap::new));
         log.exiting(XmlMapper.class.getName(), "parseAttributes", output);
         return output;
     }

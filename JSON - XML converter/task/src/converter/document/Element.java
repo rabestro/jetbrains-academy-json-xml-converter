@@ -33,4 +33,12 @@ public class Element {
         return !attributes.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "Element{" +
+                "tag='" + tag + '\'' +
+                ", attributes=" + attributes +
+                ", content=" + content.getData() +
+                '}';
+    }
 }

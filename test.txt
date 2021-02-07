@@ -1,6 +1,6 @@
 {
     "person" : {
-        "@rate" : "1",
+        "@rate" : 1,
         "@name" : "Torvalds",
         "#person" : null
     }

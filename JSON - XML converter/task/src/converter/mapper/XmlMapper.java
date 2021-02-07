@@ -21,11 +21,12 @@ public class XmlMapper implements ObjectMapper {
             "<(?<tag>\\w+)\\s*(?<attributes>\\s+[^>]*)?\\s*(:?/>|>\\s*(?<content>.*)\\s*</\\k<tag>>)",
             Pattern.DOTALL);
     private static final Pattern CHILDREN = Pattern.compile(
-            "(?<child><(?<tag>\\w+).*</\\k<tag>>|<\\w+[^/]*/>)", Pattern.DOTALL);
+            "(?<child><(?<tag>\\w+)[^/<]*(/>|</\\k<tag>>))", Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element parse(final String data) {
         log.entering(XmlMapper.class.getName(), "parse", data);
+
         final var matcher = ELEMENT.matcher(data);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Not a valid xml: " + data);
@@ -71,12 +72,15 @@ public class XmlMapper implements ObjectMapper {
     }
 
     private Content parseContent(final String content) {
+        log.entering(XmlMapper.class.getName(), "parseContent", content);
+
         if (isNull(content)) {
             return new Content();
         }
         final var data = content.strip();
         if (!data.startsWith("<")) {
-            return new Content(content);
+            log.exiting(XmlMapper.class.getName(), "parseContent", data);
+            return new Content(data);
         }
         final var children = CHILDREN
                 .matcher(data)
@@ -85,6 +89,7 @@ public class XmlMapper implements ObjectMapper {
                 .map(this::parse)
                 .collect(toUnmodifiableList());
 
+        log.exiting(XmlMapper.class.getName(), "parseContent", children);
         return new Content(children);
     }
 

@@ -1,6 +1,6 @@
 package converter.mapper;
 
-import converter.domain.Element;
+import converter.document.Element;
 
 public interface ObjectMapper {
     Element read(final String data);

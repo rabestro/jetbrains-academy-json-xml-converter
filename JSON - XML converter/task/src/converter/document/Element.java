@@ -1,4 +1,4 @@
-package converter.domain;
+package converter.document;
 
 import java.util.Map;
 

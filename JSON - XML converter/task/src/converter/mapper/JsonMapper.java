@@ -1,7 +1,7 @@
 package converter.mapper;
 
-import converter.domain.Content;
-import converter.domain.Element;
+import converter.document.Content;
+import converter.document.Element;
 
 import java.util.Map;
 import java.util.Objects;

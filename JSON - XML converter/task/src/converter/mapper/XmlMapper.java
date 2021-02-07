@@ -18,7 +18,8 @@ public class XmlMapper implements ObjectMapper {
     private static final Logger log = Logger.getLogger(XmlMapper.class.getName());
 
     private static final Pattern ELEMENT = Pattern.compile(
-            "<(?<tag>\\w+)(?<attributes> .*)?(:?>\\s*(?<content>.*)\\s*</\\k<tag>>| ?/>)", Pattern.DOTALL);
+            "<(?<tag>\\w+)\\s*(?<attributes>\\s+[^>]*)?\\s*(:?/>|>\\s*(?<content>.*)\\s*</\\k<tag>>)",
+            Pattern.DOTALL);
     private static final Pattern CHILDREN = Pattern.compile(
             "(?<child><(?<tag>\\w+).*</\\k<tag>>|<\\w+[^/]*/>)", Pattern.DOTALL);
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");

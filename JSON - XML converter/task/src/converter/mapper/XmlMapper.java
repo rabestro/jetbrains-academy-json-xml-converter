@@ -24,6 +24,7 @@ public class XmlMapper implements ObjectMapper {
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
 
     public Element parse(final String data) {
+        log.entering(XmlMapper.class.getName(), "parse", data);
         final var matcher = ELEMENT.matcher(data);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Not a valid xml: " + data);
@@ -31,8 +32,10 @@ public class XmlMapper implements ObjectMapper {
         final var tag = matcher.group("tag");
         final var attributes = parseAttributes(matcher.group("attributes"));
         final var content = parseContent(matcher.group("content"));
+        final var element =  new Element(tag, attributes, content);
 
-        return new Element(tag, attributes, content);
+        log.exiting(XmlMapper.class.getName(), "parse", element);
+        return element;
     }
 
     @Override

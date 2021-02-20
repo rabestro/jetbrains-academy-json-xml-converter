@@ -1,83 +1,32 @@
+import org.hyperskill.hstest.dynamic.DynamicTest;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
-import org.hyperskill.hstest.testcase.TestCase;
+import org.hyperskill.hstest.testing.TestedProgram;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+public class ConverterTest extends StageTest {
 
-class Clue {
-    String answer;
-    String input;
-    boolean showAnswer;
+    final String[][] clues = new String[][]{
+            {"<host>127.0.0.1</host>", "{\"host\":\"127.0.0.1\"}"},
+            {"{\"host\":\"127.0.0.1\"}", "<host>127.0.0.1</host>"},
+            {"<pizza>slice</pizza>", "{\"pizza\":\"slice\"}"},
+            {"{\"pizza\":\"slice\"}", "<pizza>slice</pizza>"},
+            {"<success/>", "{\"success\":null}"},
+            {"{\"success\":null}", "<success/>"},
+            {"{\"jdk\":\"1.8.9\"}", "<jdk>1.8.9</jdk>"},
+            {"<jdk>1.8.9</jdk>", "{\"jdk\":\"1.8.9\"}"},
+            {"<qwerty/>", "{\"qwerty\":null}"},
+            {"{\"qwerty\":null}", "<qwerty/>"}
+    };
 
-    Clue(String answer, String input, boolean showAnswer) {
-        this.answer = answer.replaceAll("\\s+", "");;
-        this.input = input.replaceAll("\\s+", "");
-        this.showAnswer = showAnswer;
+    @DynamicTest(data = "clues")
+    CheckResult simpleTest(final String input, final String expected) {
+        final var program = new TestedProgram();
+        program.start();
+
+        final var actual = program.execute(input).replaceAll("\\s+", "");
+
+        Assert.assertEquals(expected, actual, "feedback", input, expected, actual);
+
+        return CheckResult.correct();
     }
-
-    String getFeedback(String userOutput) {
-        if (!showAnswer) {
-            return "";
-        }
-        return
-            "Test: " + input + "\n" +
-            "Answer: " + answer + "\n" +
-            "Your output: " + userOutput;
-    }
-}
-
-public class ConverterTest extends StageTest<Clue> {
-
-    static Map<String, String> allTests = Map.of(
-        "<host>127.0.0.1</host>", "{\"host\":\"127.0.0.1\"}",
-        "{\"host\":\"127.0.0.1\"}", "<host>127.0.0.1</host>",
-        "<pizza>slice</pizza>", "{\"pizza\":\"slice\"}",
-        "{\"pizza\":\"slice\"}", "<pizza>slice</pizza>",
-        "<success/>", "{\"success\":null}",
-        "{\"success\":null}", "<success/>",
-        "{\"jdk\":\"1.8.9\"}", "<jdk>1.8.9</jdk>",
-        "<jdk>1.8.9</jdk>", "{\"jdk\":\"1.8.9\"}",
-        "<qwerty/>", "{\"qwerty\":null}",
-        "{\"qwerty\":null}", "<qwerty/>"
-    );
-
-    @Override
-    public List<TestCase<Clue>> generate() {
-
-        List<TestCase<Clue>> tests = new ArrayList<>();
-
-        allTests.forEach((input, answer) -> {
-            TestCase<Clue> test = new TestCase<>();
-            test.setInput(input);
-            test.setAttach(new Clue(answer, input, false));
-            tests.add(test);
-        });
-
-        int i = 0;
-        for(TestCase<Clue> test : tests) {
-
-            test.getAttach().showAnswer = true;
-
-            i++;
-            if (i == 6){
-                break;
-            }
-        }
-
-        return tests;
-    }
-
-    @Override
-    public CheckResult check(String reply, Clue clue) {
-        String userAnswer = reply.replaceAll("\\s+", "");
-
-        if (userAnswer.equals(clue.answer)) {
-            return CheckResult.correct();
-        }
-
-        return new CheckResult(false, clue.getFeedback(userAnswer));
-    }
-
 }

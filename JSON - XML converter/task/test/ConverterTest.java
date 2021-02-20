@@ -1,9 +1,8 @@
 import org.hyperskill.hstest.dynamic.DynamicTest;
-import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testing.TestedProgram;
 
-public class ConverterTest extends StageTest {
+public class ConverterTest extends ExtendedTest {
 
     final String[][] clues = new String[][]{
             {"<host>127.0.0.1</host>", "{\"host\":\"127.0.0.1\"}"},
@@ -25,7 +24,7 @@ public class ConverterTest extends StageTest {
 
         final var actual = program.execute(input).replaceAll("\\s+", "");
 
-        Assert.assertEquals(expected, actual, "feedback", input, expected, actual);
+        assertEquals(expected, actual, "feedback", input, expected, actual);
 
         return CheckResult.correct();
     }

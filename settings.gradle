@@ -2,7 +2,7 @@ static String sanitizeName(String name) {
     return name.replaceAll("[ /\\\\:<>\"?*|()]", "_").replaceAll("(^[.]+)|([.]+\$)", "")
 }
 
-rootProject.name = 'JSON_XML_converter'
+rootProject.name = 'JSON_-_XML_converter'
 
 rootProject.projectDir.eachDirRecurse {
     if (!isTaskDir(it) || it.path.contains(".idea")) {

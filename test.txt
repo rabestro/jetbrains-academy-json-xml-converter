@@ -1,7 +1,0 @@
-{
-    "person" : {
-        "@rate" : 1,
-        "@name" : "Torvalds",
-        "#person" : null
-    }
-}

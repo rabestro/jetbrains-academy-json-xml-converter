@@ -1,9 +1,10 @@
 import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
+import org.hyperskill.hstest.stage.StageTest;
 
 import java.util.ResourceBundle;
 import static java.text.MessageFormat.format;
 
-public class Assert {
+public abstract class ExtendedTest extends StageTest {
     private static final ResourceBundle messages = ResourceBundle.getBundle("ErrorMessages");
 
     public static void assertEquals(

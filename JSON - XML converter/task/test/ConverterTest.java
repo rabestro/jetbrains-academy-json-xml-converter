@@ -1,9 +1,14 @@
+import org.hyperskill.hstest.dynamic.DynamicTest;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testcase.TestCase;
+import org.hyperskill.hstest.testing.TestedProgram;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 class Clue {
     String answer;
@@ -17,85 +22,180 @@ class Clue {
 
 public class ConverterTest extends StageTest<Clue> {
 
+    private static final Pattern ELEMENTS_DELIMITER = Pattern
+            .compile("\\s+(?=Element:)", Pattern.CASE_INSENSITIVE);
+
+    private static final String[][] clues = new String[][]{{"" +
+            "<transaction>\n" +
+            "    <id>6753322</id>\n" +
+            "    <number region=\"Russia\">8-900-000-00-00</number>\n" +
+            "    <nonattr />\n" +
+            "    <nonattr></nonattr>\n" +
+            "    <nonattr>text</nonattr>\n" +
+            "    <attr id=\"1\" />\n" +
+            "    <attr id=\"2\"></attr>\n" +
+            "    <attr id=\"3\">text</attr>\n" +
+            "    <email>\n" +
+            "        <to>to_example@gmail.com</to>\n" +
+            "        <from>from_example@gmail.com</from>\n" +
+            "        <subject>Project discussion</subject>\n" +
+            "        <body font=\"Verdana\">Body message</body>\n" +
+            "        <date day=\"12\" month=\"12\" year=\"2018\"/>\n" +
+            "    </email>\n" +
+            "</transaction>"
+            , "" +
+            "Element:\n" +
+            "path = transaction\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, id\n" +
+            "value = \"6753322\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, number\n" +
+            "value = \"8-900-000-00-00\"\n" +
+            "attributes:\n" +
+            "region = \"Russia\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, nonattr\n" +
+            "value = null\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, nonattr\n" +
+            "value = \"\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, nonattr\n" +
+            "value = \"text\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, attr\n" +
+            "value = null\n" +
+            "attributes:\n" +
+            "id = \"1\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, attr\n" +
+            "value = \"\"\n" +
+            "attributes:\n" +
+            "id = \"2\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, attr\n" +
+            "value = \"text\"\n" +
+            "attributes:\n" +
+            "id = \"3\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email, to\n" +
+            "value = \"to_example@gmail.com\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email, from\n" +
+            "value = \"from_example@gmail.com\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email, subject\n" +
+            "value = \"Project discussion\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email, body\n" +
+            "value = \"Body message\"\n" +
+            "attributes:\n" +
+            "font = \"Verdana\"\n" +
+            "\n" +
+            "Element:\n" +
+            "path = transaction, email, date\n" +
+            "value = null\n" +
+            "attributes:\n" +
+            "day = \"12\"\n" +
+            "month = \"12\"\n" +
+            "year = \"2018\""}
+    };
+
     static Map<String, String> allTests;
 
     static {
         allTests = new LinkedHashMap<>();
 
         allTests.put(
-            "<transaction>\n" +
-                "    <id>6753322</id>\n" +
-                "    <number region=\"Russia\">8-900-000-00-00</number>\n" +
-                "    <nonattr />\n" +
-                "    <nonattr></nonattr>\n" +
-                "    <nonattr>text</nonattr>\n" +
-                "    <attr id=\"1\" />\n" +
-                "    <attr id=\"2\"></attr>\n" +
-                "    <attr id=\"3\">text</attr>\n" +
-                "    <email>\n" +
-                "        <to>to_example@gmail.com</to>\n" +
-                "        <from>from_example@gmail.com</from>\n" +
-                "        <subject>Project discussion</subject>\n" +
-                "        <body font=\"Verdana\">Body message</body>\n" +
-                "        <date day=\"12\" month=\"12\" year=\"2018\"/>\n" +
-                "    </email>\n" +
-                "</transaction>",
+                "<transaction>\n" +
+                        "    <id>6753322</id>\n" +
+                        "    <number region=\"Russia\">8-900-000-00-00</number>\n" +
+                        "    <nonattr />\n" +
+                        "    <nonattr></nonattr>\n" +
+                        "    <nonattr>text</nonattr>\n" +
+                        "    <attr id=\"1\" />\n" +
+                        "    <attr id=\"2\"></attr>\n" +
+                        "    <attr id=\"3\">text</attr>\n" +
+                        "    <email>\n" +
+                        "        <to>to_example@gmail.com</to>\n" +
+                        "        <from>from_example@gmail.com</from>\n" +
+                        "        <subject>Project discussion</subject>\n" +
+                        "        <body font=\"Verdana\">Body message</body>\n" +
+                        "        <date day=\"12\" month=\"12\" year=\"2018\"/>\n" +
+                        "    </email>\n" +
+                        "</transaction>",
 
 
-            "Element:\n" +
-                "path = transaction\n" +
-                "\n" +
                 "Element:\n" +
-                "path = transaction, id\n" +
-                "value = \"6753322\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, number\n" +
-                "value = \"8-900-000-00-00\"\n" +
-                "attributes:\n" +
-                "region = \"Russia\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, nonattr\n" +
-                "value = null\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, nonattr\n" +
-                "value = \"\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, nonattr\n" +
-                "value = \"text\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, attr\n" +
-                "value = null\n" +
-                "attributes:\n" +
-                "id = \"1\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, attr\n" +
-                "value = \"\"\n" +
-                "attributes:\n" +
-                "id = \"2\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, attr\n" +
-                "value = \"text\"\n" +
-                "attributes:\n" +
-                "id = \"3\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, email\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, email, to\n" +
-                "value = \"to_example@gmail.com\"\n" +
-                "\n" +
-                "Element:\n" +
-                "path = transaction, email, from\n" +
-                "value = \"from_example@gmail.com\"\n" +
-                "\n" +
+                        "path = transaction\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, id\n" +
+                        "value = \"6753322\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, number\n" +
+                        "value = \"8-900-000-00-00\"\n" +
+                        "attributes:\n" +
+                        "region = \"Russia\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, nonattr\n" +
+                        "value = null\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, nonattr\n" +
+                        "value = \"\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, nonattr\n" +
+                        "value = \"text\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, attr\n" +
+                        "value = null\n" +
+                        "attributes:\n" +
+                        "id = \"1\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, attr\n" +
+                        "value = \"\"\n" +
+                        "attributes:\n" +
+                        "id = \"2\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, attr\n" +
+                        "value = \"text\"\n" +
+                        "attributes:\n" +
+                        "id = \"3\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, email\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, email, to\n" +
+                        "value = \"to_example@gmail.com\"\n" +
+                        "\n" +
+                        "Element:\n" +
+                        "path = transaction, email, from\n" +
+                        "value = \"from_example@gmail.com\"\n" +
+                        "\n" +
                 "Element:\n" +
                 "path = transaction, email, subject\n" +
                 "value = \"Project discussion\"\n" +
@@ -374,12 +474,34 @@ public class ConverterTest extends StageTest<Clue> {
 
                 if (!userLine.equals(answerLine)) {
                     return new CheckResult(false,
-                        "The following line was expected:\n" + answerLine + "\n" +
-                            "The following line was given:\n" + userLine);
+                            "The following line was expected:\n" + answerLine + "\n" +
+                                    "The following line was given:\n" + userLine);
                 }
             }
 
             return CheckResult.correct();
         }
+    }
+
+    @DynamicTest(data = "clues")
+    CheckResult simpleTest(final String input, final String output) {
+        final var program = new TestedProgram();
+        program.start();
+
+        final var expected = parse(output);
+        final var actual = parse(program.execute(input));
+
+//        final var actual = SPACES.matcher(program.execute(input)).replaceAll("");
+
+//        assertEquals(expected, actual, "feedback", input, expected, actual);
+
+        return CheckResult.correct();
+    }
+
+    private List<Element> parse(final String data) {
+        return ELEMENTS_DELIMITER
+                .splitAsStream(data)
+                .map(Element::parse)
+                .collect(toUnmodifiableList());
     }
 }

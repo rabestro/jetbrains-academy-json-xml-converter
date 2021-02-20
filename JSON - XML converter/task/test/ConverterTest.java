@@ -1,17 +1,18 @@
 import com.google.gson.*;
 import org.hyperskill.hstest.dynamic.DynamicTest;
-import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testcase.TestCase;
-
 import org.hyperskill.hstest.testing.TestedProgram;
 import org.w3c.dom.*;
 
-import javax.xml.parsers.*;
-import java.io.*;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 class Clue {
     String answer;
@@ -174,13 +175,13 @@ public class ConverterTest extends ExtendedTest<Clue> {
         return result;
     }
 
-    public Element stringToXML(String str) throws Exception {
+    public static Element stringToXML(String xmlString) throws Exception {
         DocumentBuilderFactory factory =
             DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
         ByteArrayInputStream input = new ByteArrayInputStream(
-            str.getBytes("UTF-8"));
+            xmlString.getBytes("UTF-8"));
 
         Document document = builder.parse(input);
 
@@ -451,6 +452,9 @@ public class ConverterTest extends ExtendedTest<Clue> {
         assertFalse(actual.isBlank(), "empty");
 
         assertFalse(actual.charAt(0) != '<' && actual.charAt(0) != '{', "firstSymbol");
+
+        assertMatches("^[[{].*", actual, "firstSymbol");
+
 
 //        final var actual = SPACES.matcher(program.execute(input)).replaceAll("");
 

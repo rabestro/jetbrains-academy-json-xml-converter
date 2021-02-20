@@ -1,11 +1,11 @@
 import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
 import org.hyperskill.hstest.stage.StageTest;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+
 import static java.text.MessageFormat.format;
 
 public abstract class ExtendedTest<T> extends StageTest<T> {
@@ -28,6 +28,16 @@ public abstract class ExtendedTest<T> extends StageTest<T> {
             Files.writeString(Path.of(name), content);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void assertFalse(
+            final boolean condition,
+            final String error,
+            final Object... args) {
+        if (condition) {
+            final var feedback = format(messages.getString(error), args);
+            throw new WrongAnswer(feedback);
         }
     }
 }

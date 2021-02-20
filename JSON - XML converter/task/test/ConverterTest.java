@@ -444,8 +444,10 @@ public class ConverterTest extends ExtendedTest<Clue> {
     @DynamicTest(data = "clues")
     CheckResult simpleTest(final String input, final String expected) {
         createFile("test.txt", input);
+
         final var program = new TestedProgram();
-        program.start();
+        final var actual = program.start().strip();
+
 
 //        final var actual = SPACES.matcher(program.execute(input)).replaceAll("");
 

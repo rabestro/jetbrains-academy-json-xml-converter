@@ -448,6 +448,9 @@ public class ConverterTest extends ExtendedTest<Clue> {
         final var program = new TestedProgram();
         final var actual = program.start().strip();
 
+        assertFalse(actual.isBlank(), "empty");
+
+        assertFalse(actual.charAt(0) != '<' && actual.charAt(0) != '{', "firstSymbol");
 
 //        final var actual = SPACES.matcher(program.execute(input)).replaceAll("");
 

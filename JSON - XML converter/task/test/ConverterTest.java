@@ -1,8 +1,10 @@
 import com.google.gson.*;
+import org.hyperskill.hstest.dynamic.DynamicTest;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testcase.TestCase;
 
+import org.hyperskill.hstest.testing.TestedProgram;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
@@ -29,7 +31,7 @@ class Clue {
     }
 }
 
-public class ConverterTest extends StageTest<Clue> {
+public class ConverterTest extends ExtendedTest<Clue> {
 
     static Map<String, String> allTests;
 
@@ -439,4 +441,16 @@ public class ConverterTest extends StageTest<Clue> {
         return CheckResult.correct();
     }
 
+    @DynamicTest(data = "clues")
+    CheckResult simpleTest(final String input, final String expected) {
+        createFile("test.txt", input);
+        final var program = new TestedProgram();
+        program.start();
+
+//        final var actual = SPACES.matcher(program.execute(input)).replaceAll("");
+
+//        assertEquals(expected, actual, "feedback", input, expected, actual);
+
+        return CheckResult.correct();
+    }
 }

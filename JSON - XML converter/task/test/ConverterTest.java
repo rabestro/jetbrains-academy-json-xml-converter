@@ -25,7 +25,7 @@ public class ConverterTest extends StageTest {
     @DynamicTest(data = "testCases")
     CheckResult simpleTest(final int testCase) throws IOException {
         Files.copy(
-                Path.of("test/data/test" + testCase + ".txt"),
+                Path.of("test/data/test" + testCase + ".xml"),
                 Path.of("test.txt"),
                 StandardCopyOption.REPLACE_EXISTING);
 

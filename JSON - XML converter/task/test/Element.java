@@ -56,17 +56,19 @@ public class Element {
         final var second = lines.next();
         assertTrue(second.startsWith("path"), "startPath", second);
 
-        assertMatches(PATH_PATTERN, second, "pathPattern", second);
-        final var path = PATH_PATTERN.matcher(second).group("path");
+        final var pathRecord = PATH_PATTERN.matcher(second);
+        assertTrue(pathRecord.matches(), "pathPattern", second);
+        final var path = pathRecord.group("path");
 
         if (!lines.hasNext()) {
             return new Element(path);
         }
 
         final var third = lines.next();
-        assertMatches(THIRD_PATTERN, third, "thirdLine", third);
+        final var keyRecord = THIRD_PATTERN.matcher(third);
+        assertTrue(keyRecord.matches(), "thirdLine", third);
+        final var keyword = keyRecord.group("keyword");
 
-        final var keyword = THIRD_PATTERN.matcher(third).group("keyword");
         final ElementValue value;
 
         if ("value".equalsIgnoreCase(keyword)) {

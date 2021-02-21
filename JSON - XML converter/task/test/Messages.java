@@ -15,7 +15,14 @@ public class Messages extends ListResourceBundle {
                                 + "Found the second line in the block: \"{0}\"."},
                 {"pathPattern",
                         "The path of element should be in the format: \"path = tag0, tag1, ..., tagN\"\n"
-                                + "Found the path in format: \"{0}\"."}
+                                + "Found the path in format: \"{0}\"."},
+                {"thirdLine",
+                        "The third line of block should starts with keywords 'value' or 'attributes'.\n"
+                                + "Found the third line: {0}."},
+                {"valuePattern",
+                        "The value of element should be in the format:\n"
+                                + "value = \"...\" or value = null\n" + "Found: {0}."}
+
 
         };
     }

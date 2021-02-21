@@ -33,6 +33,15 @@ public class Messages extends ListResourceBundle {
                         "The attribute of element should be in the format:\n"
                                 + "key = \"value\"" + "Found: {0}."},
 
+                {"lessElements",
+                        "The number of elements is less then expected.\n"
+                                + "The program outputs only {0} elements but expected {1}."},
+                {"moreElements",
+                        "The number of elements is more then expected.\n"
+                                + "The program outputs {0} elements but expected only {1}."},
+                {"elementsNotEqual",
+                        "The element number {0} is not equals to expected.\n"
+                                + "The expected output for element #{0} is\n{1}"},
         };
     }
 }

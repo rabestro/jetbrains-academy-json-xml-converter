@@ -55,4 +55,14 @@ public class Assert {
             throw new WrongAnswer(feedback);
         }
     }
+
+    public static void assertFalse(
+            final boolean condition,
+            final String error,
+            final Object... args) {
+        if (condition) {
+            final var feedback = format(messages.getString(error), args);
+            throw new WrongAnswer(feedback);
+        }
+    }
 }

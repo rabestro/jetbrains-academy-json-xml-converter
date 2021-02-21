@@ -1,6 +1,7 @@
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -40,14 +41,14 @@ public class Element {
     }
 
     public static Element parse(final String data) {
-        final var block = data.lines()
+        final var elementLines = data.lines()
                 .filter(not(String::isBlank))
                 .map(String::strip)
                 .collect(toUnmodifiableList());
 
-        assertTrue(block.size() > 1, "minimumTwoLines");
+        assertTrue(elementLines.size() > 1, "minimumTwoLines");
 
-        final var lines = block.iterator();
+        final var lines = elementLines.iterator();
 
         final var first = lines.next();
         assertTrue(first.startsWith("Element:"), "startElement", first);
@@ -69,8 +70,9 @@ public class Element {
         final ElementValue value;
 
         if ("value".equalsIgnoreCase(keyword)) {
-            assertMatches(VALUE_PATTERN, third, "valuePattern", third);
-            value = ElementValue.parse(VALUE_PATTERN.matcher(third).group("value"));
+            final var record = VALUE_PATTERN.matcher(third);
+            assertTrue(record.matches(), "valuePattern", third);
+            value = ElementValue.parse(record.group("value"));
             if (!lines.hasNext()) {
                 return new Element(path, value);
             }
@@ -94,4 +96,28 @@ public class Element {
         return new Element(path, value, attributes);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Element element = (Element) o;
+        return path.equals(element.path)
+                && value.equals(element.value)
+                && attributes.equals(element.attributes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, value, attributes);
+    }
+
+    @Override
+    public String toString() {
+        final var output = new StringBuilder("Element:\npath = " + path + '\n' + value);
+        if (!attributes.isEmpty()) {
+            output.append("attributes:\n");
+            attributes.forEach((key, value) -> output.append(key + " = \"" + value + "\"\n"));
+        }
+        return output.toString();
+    }
 }

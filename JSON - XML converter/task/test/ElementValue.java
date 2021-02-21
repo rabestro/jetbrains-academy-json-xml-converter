@@ -1,3 +1,4 @@
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class ElementValue {
@@ -28,5 +29,30 @@ public class ElementValue {
 
     enum Type {
         ABSENT, NULL, TEXT
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ElementValue that = (ElementValue) o;
+        return type == that.type && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, text);
+    }
+
+    @Override
+    public String toString() {
+        switch (type) {
+            case ABSENT:
+                return "";
+            case NULL:
+                return "value = null\n";
+            default:
+                return "value = \"" + text + "\"\n";
+        }
     }
 }

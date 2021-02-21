@@ -21,8 +21,17 @@ public class Messages extends ListResourceBundle {
                                 + "Found the third line: {0}."},
                 {"valuePattern",
                         "The value of element should be in the format:\n"
-                                + "value = \"...\" or value = null\n" + "Found: {0}."}
-
+                                + "value = \"...\" or value = null\n" + "Found: {0}."},
+                {"startAttributes",
+                        "The line after value should starts with \"attributes\" keyword.\n"
+                                + "Found the line after the \"value\": \"{0}\"."},
+                {"noAttributes",
+                        "After keyword \"attributes\" should be at least one attribute.\n"
+                                + "If an element doesn't have attributes the program "
+                                + "should skip printing the keyword \"attributes\" for that element."},
+                {"attributePattern",
+                        "The attribute of element should be in the format:\n"
+                                + "key = \"value\"" + "Found: {0}."},
 
         };
     }

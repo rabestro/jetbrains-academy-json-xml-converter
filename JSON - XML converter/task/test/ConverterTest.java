@@ -4,6 +4,9 @@ import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testing.TestedProgram;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -392,13 +395,14 @@ public class ConverterTest extends StageTest {
         );
     }
 
-    @DynamicTest(data = "clues")
-    CheckResult simpleTest(final String input, final String expectedOutput) {
-        final var program = new TestedProgram();
-        program.start();
-
+    @DynamicTest()
+    CheckResult simpleTest() throws IOException {
+        Files.copy(Path.of("test1.txt"), Path.of("test.txt"));
+        final var expectedOutput = Files.readString(Path.of("expected1.txt"));
         final var expected = parseDocument(expectedOutput);
-        final var actual = parseDocument(program.execute(input));
+
+        final var program = new TestedProgram();
+        final var actual = parseDocument(program.start());
 
         Assert.assertFalse(actual.size() < expected.size(),
                 "lessElements", actual.size(), expected.size());

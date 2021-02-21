@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toUnmodifiableList;
-import static my.Assert.*;
+import static util.Assert.*;
 
 public class Element {
     private static final Pattern PATH_PATTERN = Pattern

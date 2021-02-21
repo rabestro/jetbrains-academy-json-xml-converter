@@ -1,4 +1,4 @@
-package my;
+package util;
 
 import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
 

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
-import static my.Assert.assertEquals;
-import static my.Assert.assertFalse;
+import static util.Assert.assertEquals;
+import static util.Assert.assertFalse;
 
 
 public class ConverterTest extends StageTest {
@@ -29,27 +29,31 @@ public class ConverterTest extends StageTest {
                 Path.of("test.txt"),
                 StandardCopyOption.REPLACE_EXISTING);
 
-        final var expectedOutput = Files.readString(Path.of("test/data/expected" + testCase + ".txt"));
-        final var expected = parseDocument(expectedOutput);
+        final var expectedOutput = Files.readString(
+                Path.of("test/data/expected" + testCase + ".txt"));
+        final var expectedElements = parseOutput(expectedOutput);
 
         final var program = new TestedProgram();
-        final var actual = parseDocument(program.start());
+        final var actualOutput = program.start();
 
-        assertFalse(actual.size() < expected.size(),
-                "lessElements", actual.size(), expected.size());
+        assertFalse(actualOutput.isBlank(), "empty");
+        final var actualElements = parseOutput(actualOutput);
 
-        assertFalse(actual.size() < expected.size(),
-                "moreElements", actual.size(), expected.size());
+        assertFalse(actualElements.size() < expectedElements.size(),
+                "lessElements", actualElements.size(), expectedElements.size());
 
-        for (int i = 0; i < expected.size(); ++i) {
-            assertEquals(expected.get(i), expected.get(i),
-                    "elementsNotEqual", i + 1, expected.get(i));
+        assertFalse(actualElements.size() < expectedElements.size(),
+                "moreElements", actualElements.size(), expectedElements.size());
+
+        for (int i = 0; i < expectedElements.size(); ++i) {
+            assertEquals(expectedElements.get(i), expectedElements.get(i),
+                    "elementsNotEqual", i + 1, expectedElements.get(i));
         }
 
         return CheckResult.correct();
     }
 
-    private List<Element> parseDocument(final String data) {
+    private List<Element> parseOutput(final String data) {
         return ELEMENTS_DELIMITER
                 .splitAsStream(data)
                 .map(Element::parse)

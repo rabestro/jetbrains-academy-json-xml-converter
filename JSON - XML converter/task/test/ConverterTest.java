@@ -1,4 +1,3 @@
-import my.Assert;
 import org.hyperskill.hstest.dynamic.DynamicTest;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
@@ -12,6 +11,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
+import static my.Assert.assertEquals;
+import static my.Assert.assertFalse;
 
 
 public class ConverterTest extends StageTest {
@@ -34,14 +35,14 @@ public class ConverterTest extends StageTest {
         final var program = new TestedProgram();
         final var actual = parseDocument(program.start());
 
-        Assert.assertFalse(actual.size() < expected.size(),
+        assertFalse(actual.size() < expected.size(),
                 "lessElements", actual.size(), expected.size());
 
-        Assert.assertFalse(actual.size() < expected.size(),
+        assertFalse(actual.size() < expected.size(),
                 "moreElements", actual.size(), expected.size());
 
         for (int i = 0; i < expected.size(); ++i) {
-            Assert.assertEquals(expected.get(i), expected.get(i),
+            assertEquals(expected.get(i), expected.get(i),
                     "elementsNotEqual", i + 1, expected.get(i));
         }
 
